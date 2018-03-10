@@ -1,0 +1,26 @@
+.input-component {
+
+    &__input-email,
+    &__input-password,
+    &__input-confirm-password {
+        width: 100%;
+        display: block;
+        height: 3rem;
+        border: none;
+        border-bottom: 2px solid $dark-purple;
+        font-size: 1.6rem;
+        font-weight: 500;
+        margin-bottom: 1rem;
+        color: #201e1e;
+        
+        &:focus {
+            outline: none;
+            box-shadow: 0 1rem 2rem rgba($color-black, .1);
+            border-bottom: 3px solid $dark-purple;
+        }
+
+        &:invalid {
+            border-bottom: 3px solid $color-invalid-form;
+        }
+    }
+}

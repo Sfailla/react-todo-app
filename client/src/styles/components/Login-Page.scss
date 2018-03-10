@@ -1,0 +1,24 @@
+.login {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+
+    &--left-box {
+        width: 100%;
+        padding: 4rem;
+        background: linear-gradient(to bottom, rgba(0, 210, 255, .7), rgba(228, 51, 148, 0.8)), 
+                    url('./images/login-bg.jpg') no-repeat center / cover;
+        color: $color-white;
+    }
+
+    &--right-box {
+        width: 100%;
+        height: 100%;
+        padding: 4rem;
+        font-family: 'Lato';
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+}

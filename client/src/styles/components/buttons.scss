@@ -1,0 +1,10 @@
+.form-button {
+    display: block;
+    border: none;
+    width: 20rem;
+    height: 4rem;
+    color: $color-white;
+    border-radius: 5rem;
+    background-image: linear-gradient(to right, $light-purple, $dark-purple);
+    box-shadow: 1px 4px 1rem rgba($color-black, .6);
+}
