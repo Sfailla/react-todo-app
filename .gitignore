@@ -1,5 +1,5 @@
 node_modules
 server/config/config.js
 server/tests
-client/src/app.test.js
+test
 package-lock.json

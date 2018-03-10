@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Redirect } from 'react-router-dom'
 
 import RegisterForm from './Register-Form'
 import TextComponent from './TextComponent'
@@ -29,14 +28,17 @@ export default class RegisterPage extends Component {
         event.preventDefault()
 
         const { email, password } = this.state
+        const { register, setToken } = this.Authorize
         // this handles the registration
-        this.Authorize.register(email, password)
-        try {
-            setTimeout(() => { this.handleRedirect() }, 500)
-        }
-        catch (e) {
-            // error?
-        }
+        register(email, password)
+            .then(res => res.json())
+            .then(data => {
+                setToken(data.tokens[0].token)
+                setTimeout(() => { 
+                    this.props.history.push('/dashboard')
+                }, 500)
+            })
+            .catch(err => console.log(err));
     }
 
     handleOnChange = (event) => {
@@ -44,29 +46,12 @@ export default class RegisterPage extends Component {
         this.setState(() => ({ [name]: value }))
     }
 
-    handleRedirect = () => {
-        const { isLoggedIn } = this.Authorize
-        try {
-            if (isLoggedIn()) {
-                this.setState(() => ({ redirectTo: true }))
-            }
-        } catch (e) {
-            // errors?
-        }
-    }
-
     render() {
-        
-        if (this.state.redirectTo) {
-            return (
-                <Redirect to={{ pathname: '/dashboard' }} />
-            )
-        } 
         return (
             <div className="App-Layout register">
                 <div className="register--left-box">
                     <TextComponent
-                        {...this.props}
+                        subtitle={this.props.subtitle}
                         title='TODO APP'
                         needButton="LOGIN"
                         location="/login"
@@ -74,13 +59,12 @@ export default class RegisterPage extends Component {
                 </div>
                 <div className="register--right-box">
                     <h1 className="Form-Type register__right-title">Register Here</h1>
-                    <RegisterForm {...this.props}
+                    <RegisterForm 
                         email={this.state.email}
                         errors={this.state.errors}               
                         password={this.state.password}
                         confPassword={this.state.confPassword} 
-                        handleOnChange={this.handleOnChange}
-                        handleRedirect={this.handleRedirect} />
+                        handleOnChange={this.handleOnChange} />
                     <p style={{ textAlign: 'center', whiteSpace: 'nowrap' }}>already registered? click <a href="/login" style={{ textDecoration: 'none' }}>here</a> to login</p>
                 </div>
             </div>

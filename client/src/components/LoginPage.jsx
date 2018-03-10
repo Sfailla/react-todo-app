@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { Redirect } from 'react-router-dom'
-
-import Authorize from '../utils/MyAuth'
 
 import LoginForm from './Login-Form'
 import TextComponent from './TextComponent';
+
+import AlertComponent from '../utils/AlertComponent'
+import Authorize from '../utils/MyAuth'
 
 
 export default class LoginPage extends Component {
@@ -14,7 +14,8 @@ export default class LoginPage extends Component {
     state = {
         email: '',
         password: '',
-        errors: '',
+        success: [],
+        errors: [],
         redirectTo: false
     }
 
@@ -23,16 +24,23 @@ export default class LoginPage extends Component {
     handleOnSubmit = (event) => {
         event.preventDefault()
 
-        console.log(this.state.email)
-        console.log(this.state.password)
-        const { login } = this.Authorize
+        const { login, setToken } = this.Authorize
         const { email, password } = this.state
-        login(email, password)
-        try {
-            setTimeout(() => { this.handleRedirect() }, 500)
-        } catch (e) {
 
+        if (email && password  !== '') {
+            
+            login(email, password)
+                .then(res => res.json())
+                .then(data => {
+                    setToken(data.tokens[0].token)
+                    setTimeout(() => { this.props.history.push('/dashboard') }, 500)
+                })
+                .catch(err => console.log(err));
+        } else {
+            let error = 'Please fill out the form'
+            this.setState((prevState) => ({ errors: prevState.errors.concat(error) }))
         }
+
     }
 
     handleOnChange = (event) => {
@@ -40,45 +48,33 @@ export default class LoginPage extends Component {
         this.setState(() => ({ [name]: value }))
     }
 
-    handleRedirect = () => {
-        const { isLoggedIn } = this.Authorize
-        try {
-            if (isLoggedIn()) {
-                console.log(isLoggedIn())
-                setTimeout(() => { this.setState(() => ({ redirectTo: true })) })
-            }
-        } catch (e) {
-            // errors?
-        }
-    }
-
     render() {
-        const { redirectTo } = this.state
-        if (redirectTo) {
-            return (
-                <Redirect to={{ pathname: '/dashboard' }} />
-            )
-        }
+        console.log(Array.isArray(this.state.errors))
         return (
-            <div className="App-Layout login">
-                <div className="login--left-box">
-                    <TextComponent 
-                        title="LOGIN PAGE"
-                        subtitle={this.props.subtitle}
-                        needButton={false}
-                        footerMessage="...You're almost there. Login to get started!" />
-                </div>
-                <div className="login--right-box">
-                    <h2 className="Form-Type">Please enter email and password to login</h2>
-                    <LoginForm
-                        handleOnSubmit={this.handleOnSubmit}
-                        handleOnChange={this.handleOnChange}
-                        handleRedirect={this.handleRedirect}
-                        email={this.state.email}
-                        password={this.state.password}
-                        errors={this.state.errors}
-                        redirectTo={this.state.redirectTo} />
-                    <p style={{ textAlign: 'center' }}>Are you registered? if not click <a href="/">here</a></p>
+            <div>
+                {Array.isArray(this.state.errors) && this.state.errors.map((error, index) => {
+                    return <AlertComponent key={index} type="error" errors={error} />
+                }) }
+                <div className="App-Layout login">
+                    <div className="login--left-box">
+                        <TextComponent
+                            title="LOGIN PAGE"
+                            subtitle={this.props.subtitle}
+                            needButton={false}
+                            footerMessage="...You're almost there. Login to get started!" />
+                    </div>
+                    <div className="login--right-box">
+                        <h2 className="Form-Type">Enter email and password to login</h2>
+                        <a className="login__dashboard-button" href="/dashboard">Dashboard</a>
+                        <LoginForm
+                            email={this.state.email}
+                            password={this.state.password}
+                            errors={this.state.errors}
+                            redirectTo={this.state.redirectTo}
+                            handleOnSubmit={this.handleOnSubmit}
+                            handleOnChange={this.handleOnChange} />
+                        <p style={{ textAlign: 'center' }}>Are you registered? if not click <a href="/">here</a></p>
+                    </div>
                 </div>
             </div>
         )

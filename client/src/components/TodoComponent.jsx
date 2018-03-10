@@ -7,6 +7,7 @@ class TodoComponent extends Component {
     state = {
         todos: [],
         todoText: '',
+        errors: [],
         isCompleted: false
     }
 
@@ -14,15 +15,13 @@ class TodoComponent extends Component {
 
     handleOnChange = (event) => {
         const { value } = event.target
-        
         this.setState(() => ({ todoText: value }))
     }
 
     handleAddTodo = (event) => {
         const { todoText } = this.state
-        const { authFetch } = this.Authorize 
 
-        authFetch('/todos', { 
+        this.Authorize.authFetch('/todos', { 
             method: 'post', 
             body: JSON.stringify({ text: todoText }),
         })
@@ -39,7 +38,7 @@ class TodoComponent extends Component {
             .then(res => res.json())
             .then(todo => {
                 const fetchTodos = todo.todos
-                async function mapTodos(array) {
+                const mapTodos = async (array) => {
                     return await array.map(todo => {
                         return todo.text
                     })
@@ -71,9 +70,9 @@ class TodoComponent extends Component {
                         placeholder="please enter todo here" />
                     <button style={{marginBottom: '2rem', height: '3rem'}} onClick={this.handleAddTodo}>Submit</button>
                 </div>
-                   {this.state.todos.length === 0 ? <h3 className="todo__title">Please enter a Todo to get started!</h3> :
+                   {!this.state.todos.length ? <h3 className="todo__title">Please enter a Todo to get started!</h3> :
                     this.state.todos.length && this.state.todos.map((todo, index) => {
-                    return <Todo key={index} todo={todo} completed={!!this.state.isCompleted} />
+                    return <Todo key={index} todo={todo} completed={this.state.isCompleted} />
                 })}
             </div>
         )
@@ -83,11 +82,11 @@ class TodoComponent extends Component {
 export default TodoComponent
 
 
-export const Todo = (props) => {
+export const Todo = ({ todo, handleRemoveTodo }) => {
     return (
         <div style={{display: 'flex', justifyContent: 'space-between' }}>
-            <h3>{props.todo}</h3>
-            <button>remove</button>
+            <h3>{todo}</h3>
+            <button onClick={handleRemoveTodo} >remove</button>
         </div>
     )
 }

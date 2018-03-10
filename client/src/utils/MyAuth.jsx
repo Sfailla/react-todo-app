@@ -1,7 +1,7 @@
-class Authorize {
+export default class Authorize {
 
     register = (email, password) => {       
-        fetch('/users', {
+        return fetch('/users', {
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -11,14 +11,19 @@ class Authorize {
                 password
             })
         })
-        .then(res => res.json())
-        .then(data => {
-            this.setToken(data.tokens[0].token)
+        .then(res => {
+            return new Promise((resolve, reject) => {
+                if (!res) {
+                    return reject()
+                } else {
+                    return resolve(res)
+                } 
+            }) 
         })
     }
 
     login = (email, password) => {
-        fetch('/users/login', {
+        return fetch('/users/login', {
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -28,9 +33,14 @@ class Authorize {
                 password
             })
         })
-        .then(res => res.json())
-        .then(data => {
-            this.setToken(data.tokens[0].token)
+        .then(res => {
+            return new Promise((resolve, reject) => {
+                if (!res) {
+                    return reject()
+                } else {
+                    return resolve(res)
+                }
+            })
         })
     }
 
@@ -46,10 +56,10 @@ class Authorize {
         })
         .then(res => {
             return new Promise((resolve, reject) => {
-                if (res) {
-                    return resolve(res) 
-                } else {
+                if (!res) {
                     return reject()
+                } else {
+                    return resolve(res) 
                 }
             })
         })
@@ -72,5 +82,3 @@ class Authorize {
         localStorage.removeItem('TOKEN')
     }
 }
-
-export default Authorize

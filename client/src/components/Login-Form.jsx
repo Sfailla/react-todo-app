@@ -1,5 +1,5 @@
 import React from 'react' 
-import InputComponent from '../utils/InputComponent';
+import InputComponent from './InputComponent';
 
 
 const LoginForm = (props) => {    

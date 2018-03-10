@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom"
 import decode from 'jwt-decode'
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom"
 
 import './styles/index.scss'
 
