@@ -64,7 +64,8 @@ export default class RegisterPage extends Component {
                         errors={this.state.errors}               
                         password={this.state.password}
                         confPassword={this.state.confPassword} 
-                        handleOnChange={this.handleOnChange} />
+                        handleOnChange={this.handleOnChange} 
+                        warningPW="always use a secure password" />
                     <p style={{ textAlign: 'center', whiteSpace: 'nowrap' }}>already registered? click <a href="/login" style={{ textDecoration: 'none' }}>here</a> to login</p>
                 </div>
             </div>

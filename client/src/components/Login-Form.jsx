@@ -1,30 +1,40 @@
 import React from 'react' 
+import PropTypes from 'prop-types'
+
 import InputComponent from './InputComponent';
 
 
-const LoginForm = (props) => {    
+const LoginForm = ({ handleOnChange, handleOnSubmit, email, password }) => {    
     return (
         <div>
-            <form className="login-form" onSubmit={props.handleOnSubmit}>
+            <form className="login-form" onSubmit={handleOnSubmit}>
                 <InputComponent 
                     className="input-component__input-email"
                     label="Email"
                     name="email"
                     type="email"
+                    value={email}
                     placeholder="Enter a email address"
-                    handleOnChange={props.handleOnChange}/>
+                    handleOnChange={handleOnChange} />
                 <InputComponent 
                     className="input-component__input-password"
-                    style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', }}
                     label="Password"
                     name="password"
                     type="password"
+                    value={password}
                     placeholder="Enter a password"
-                    handleOnChange={props.handleOnChange}/>
-                <input onClick={props.handleRedirect} className="form-button" style={{marginTop: '5rem' }} type="submit" value="LOGIN" />
+                    handleOnChange={handleOnChange} />
+                <input className="form-button" style={{fontSize: '1.8rem', marginTop: '5rem' }} type="submit" value="LOGIN" />
             </form>
         </div>
     )
+}
+
+LoginForm.propTypes = {
+    handleOnChange: PropTypes.func,
+    handleOnSubmit: PropTypes.func,
+    email: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired
 }
 
 export default LoginForm

@@ -4,7 +4,7 @@ const _ = require('lodash')
 const { mongoose } = require('../db/mongoose')
 const { ObjectId } = require('mongoose').Types
 
-// const User = require('../models/users')
+const User = require('../models/user')
 const Todo = require('../models/todo')
 const authenticate = require('../middleware/authenticate')
 
@@ -60,7 +60,7 @@ router.delete('/:id', authenticate, (req, res) => {
         .catch(err => res.status(400).send(err))
 })
 
-router.put('/:id', authenticate, (req, res) => {
+router.patch('/:id', authenticate, (req, res) => {
     const { id } = req.params
     // using pick from lodash is very useful when dealing with 
     // sending user info.  it allows you to pick the items 

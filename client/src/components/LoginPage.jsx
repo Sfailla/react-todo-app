@@ -9,8 +9,12 @@ import Authorize from '../utils/MyAuth'
 
 export default class LoginPage extends Component {
     static defaultProps = {
-        subtitle: ['-This is the login page for the Todo App, in this app you will be able to create, update, read, or delete todos from a list. enjoy!!', '-If you are logged in the dashboard button will be enabled and you can click it to get back to dashboard' ]
+        subtitle: [
+            '-This is the login page for the Todo App, in this app you will be able to create, update, read, or delete todos from a list. enjoy!!',
+            '-If you are logged in the dashboard button will be enabled and you can click it to get back to dashboard'
+        ]
     }
+    
     state = {
         email: '',
         password: '',
@@ -49,7 +53,6 @@ export default class LoginPage extends Component {
     }
 
     render() {
-        console.log(Array.isArray(this.state.errors))
         return (
             <div>
                 {Array.isArray(this.state.errors) && this.state.errors.map((error, index) => {
@@ -65,7 +68,9 @@ export default class LoginPage extends Component {
                     </div>
                     <div className="login--right-box">
                         <h2 className="Form-Type">Enter email and password to login</h2>
-                        <a className="login__dashboard-button" href="/dashboard">Dashboard</a>
+                        <a href="/dashboard">
+                            <button className="login__dashboard-button" disabled={!this.Authorize.isLoggedIn()} >Dashboard</button>
+                        </a>
                         <LoginForm
                             email={this.state.email}
                             password={this.state.password}

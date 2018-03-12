@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
 
+import Todo from './Todo'
 import Authorize from '../utils/MyAuth'
 
 
 class TodoComponent extends Component {
     state = {
         todos: [],
-        todoText: '',
         errors: [],
-        isCompleted: false
+        todoText: '',
+        completed: false,
     }
 
     Authorize = new Authorize()
@@ -18,7 +19,7 @@ class TodoComponent extends Component {
         this.setState(() => ({ todoText: value }))
     }
 
-    handleAddTodo = (event) => {
+    handleAddTodo = () => {
         const { todoText } = this.state
 
         this.Authorize.authFetch('/todos', { 
@@ -26,9 +27,9 @@ class TodoComponent extends Component {
             body: JSON.stringify({ text: todoText }),
         })
         .then(res => res.json())
-        .then(todo => {
-            return this.setState((prevState) => ({
-                todos: prevState.todos.concat([todo.text])
+        .then(async todo => {
+            return await this.setState(() => ({
+                todos: this.state.todos.concat([todo])
             }))
         })
     }
@@ -36,19 +37,25 @@ class TodoComponent extends Component {
     handleGetTodos = () => {
         this.Authorize.authFetch('/todos', { method: 'GET' })
             .then(res => res.json())
-            .then(todo => {
-                const fetchTodos = todo.todos
-                const mapTodos = async (array) => {
-                    return await array.map(todo => {
-                        return todo.text
-                    })
-                }
-                mapTodos(fetchTodos)
-                    .then(data => {
-                        return this.setState((prevState) => ({
-                            todos: prevState.todos.concat(data)
-                        }))
-                    })
+            .then(async todo => {
+                const fetchTodos = todo.todos 
+                return await fetchTodos.map(fetchData => {
+                    return this.setState((prevState) => ({
+                        todos: prevState.todos.concat([fetchData])
+                    }))
+                })
+        })
+    }
+
+    handleRemoveTodo = (id) => {
+        this.Authorize.authFetch(`/todos/${id}`, { method: 'delete' })
+            .then(res => res.json())
+            .then(async data => {
+                return await this.setState((prevState) => ({ 
+                    todos: prevState.todos.filter((todo) => {
+                        return todo._id !== id
+                    }) 
+                }))
             })
     }
 
@@ -57,6 +64,8 @@ class TodoComponent extends Component {
     }
 
     render() {
+
+        // console.log(this.state.todos)
 
         return (
             <div className="todo">
@@ -70,26 +79,21 @@ class TodoComponent extends Component {
                         placeholder="please enter todo here" />
                     <button style={{marginBottom: '2rem', height: '3rem'}} onClick={this.handleAddTodo}>Submit</button>
                 </div>
-                   {!this.state.todos.length ? <h3 className="todo__title">Please enter a Todo to get started!</h3> :
-                    this.state.todos.length && this.state.todos.map((todo, index) => {
-                    return <Todo key={index} todo={todo} completed={this.state.isCompleted} />
-                })}
+
+        {!this.state.todos.length ? 
+            <h3 className="todo__title">Please enter a Todo to get started!</h3> :
+            Array.isArray(this.state.todos) && this.state.todos.length 
+            && this.state.todos.map((todo, index) => {  
+            return (
+                <Todo 
+                    key={index} 
+                    todo={todo.text}
+                    handleRemoveTodo={() => this.handleRemoveTodo(todo._id)} 
+                    completed={todo.completed} /> 
+                )})} 
             </div>
         )
     }
 }
 
 export default TodoComponent
-
-
-export const Todo = ({ todo, handleRemoveTodo }) => {
-    return (
-        <div style={{display: 'flex', justifyContent: 'space-between' }}>
-            <h3>{todo}</h3>
-            <button onClick={handleRemoveTodo} >remove</button>
-        </div>
-    )
-}
-
-
-

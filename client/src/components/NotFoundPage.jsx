@@ -16,7 +16,7 @@ const styleA = {
 
 const NotFoundPage = () => (
     <div style={styleDiv}>
-        <h1 style={{display: 'block', textAlign: 'center'}}>404</h1>
+        <h1 style={{textAlign: 'center'}}>404</h1>
         <h1>Sorry Page Not Found</h1>
         <a href="/" style={styleA}>go back</a>
     </div>
