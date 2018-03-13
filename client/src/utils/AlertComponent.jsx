@@ -29,12 +29,4 @@ const AlertComponent = ({ type, success, errors }) => {
     
 }
 
-// export const AlertSuccess = (props) => {
-//     return (
-//         <div style={{ ...alertStyles, backgroundColor: 'rgb(211, 230, 203)', color: '#3C763D', border: '1px solid #3C763D', }}>
-//             <p>{errors}</p>
-//         </div >
-//     )
-// }
-
 export default AlertComponent

@@ -4,18 +4,15 @@ import PropTypes from 'prop-types'
 
 const Todo = ({ todo, handleRemoveTodo }) => {
     return (
-        <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'space-between' }}>
-            <h3>{todo}</h3>
-            <button onClick={() => handleRemoveTodo(todo)}>remove</button>
+        <div className="todo__todo">
+            <h3 className="todo__todoText">{todo}</h3>
+            <button className="todo__remove" onClick={() => handleRemoveTodo(todo)}>remove</button>
         </div>
     )
 }
 
 Todo.propTypes = {
-    // todo: PropTypes.shape({
-    //     text: PropTypes.string.isRequired,
-    //     id: PropTypes.string.isRequired
-    // }),
+    todo: PropTypes.string,
     handleRemoveTodo: PropTypes.func
 }
 

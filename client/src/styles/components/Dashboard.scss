@@ -1,9 +1,27 @@
 .dashboard {
-    
-    padding: 3rem 2rem;
-}
 
-.todo {
-    
-    width: 40%;
+    padding: 3rem 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+
+    &--left-box  {
+        width: 100%;
+        padding: 2rem 1rem;
+        border-right: 2px solid var(--dark-purple);
+    }
+
+    &--right-box {
+        width: 100%;
+        padding: 2rem 1rem;
+        position: relative;
+    }
+
+    &__title {
+
+        position: absolute;
+        top: 1.2rem;
+        left: 50%;
+        transform: translateX(-50%)
+    }
 }

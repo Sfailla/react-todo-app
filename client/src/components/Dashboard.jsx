@@ -5,8 +5,12 @@ import TodoComponent from './TodoComponent'
 const Dashboard = () => {
     return (
         <div className="App-Layout dashboard">
-            <h1>Dashboard</h1>
-            <TodoComponent />
+            <div className="dashboard--left-box">
+                <TodoComponent />
+            </div>
+            <div className="dashboard--right-box">
+                <h1 className="Form-Type dashboard__title">Dashboard</h1>
+            </div>            
         </div>
     )
 }

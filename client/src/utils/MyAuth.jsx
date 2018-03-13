@@ -45,7 +45,6 @@ export default class Authorize {
     }
 
     authFetch = (url, options) => {
-        // performs api calls sending the required authentication headers
         let headers = {
             'Content-Type': 'application/json',
             'x-auth': `${this.getToken()}`

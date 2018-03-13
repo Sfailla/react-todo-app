@@ -5,6 +5,7 @@ const { ObjectId } = mongoose.Schema.Types
 const TodoSchema = new mongoose.Schema({
     text: {
         type: String,
+        unique: true,
         required: true
     },
     completed: {
