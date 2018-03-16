@@ -43,12 +43,12 @@ const RegisterForm =  ({ handleOnSubmit, handleOnChange, email, password, confPa
 }
 
 RegisterForm.propTypes = {
+    handleOnChange: PropTypes.func.isRequired,
     handleOnSubmit: PropTypes.func,
-    handleOnChange: PropTypes.func,
-    email: PropTypes.string,
-    password: PropTypes.string,
+    email: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
     confPassword: PropTypes.string,
-    warningPW: PropTypes.string
+    warningPW: PropTypes.string.isRequired
 }
 
 export default RegisterForm

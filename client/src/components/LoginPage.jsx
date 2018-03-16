@@ -32,19 +32,18 @@ export default class LoginPage extends Component {
         const { email, password } = this.state
 
         if (email && password  !== '') {
-            
+
             login(email, password)
                 .then(res => res.json())
                 .then(data => {
                     setToken(data.tokens[0].token)
-                    setTimeout(() => { this.props.history.push('/dashboard') }, 500)
+                    setTimeout(() => { this.props.history.push('/dashboard') }, 300)
                 })
                 .catch(err => console.log(err));
         } else {
             let error = 'Please fill out the form'
-            this.setState((prevState) => ({ errors: prevState.errors.concat(error) }))
+            this.setState((prevState) => ({ errors: [...prevState.errors].concat([error]) }))
         }
-
     }
 
     handleOnChange = (event) => {
@@ -68,7 +67,7 @@ export default class LoginPage extends Component {
                     </div>
                     <div className="login--right-box">
                         <h2 className="Form-Type">Enter email and password to login</h2>
-                        <a href="/dashboard">
+                        <a href="/dashboard" className="login__link">
                             <button className="login__dashboard-button" disabled={!this.Authorize.isLoggedIn()} >Dashboard</button>
                         </a>
                         <LoginForm

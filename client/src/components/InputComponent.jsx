@@ -20,10 +20,10 @@ const InputComponent = ({ className, placeholder, handleOnChange, label, name, t
 InputComponent.propTypes = {
     handleOnChange: PropTypes.func.isRequired,
     className: PropTypes.string,
-    placeholder: PropTypes.string,
-    label: PropTypes.string,
-    name: PropTypes.string,
-    type: PropTypes.string,
+    placeholder: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
     value: PropTypes.string
 }
 

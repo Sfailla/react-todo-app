@@ -20,21 +20,29 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        position: relative;
     }
 
     &__dashboard-button {
         display: block;
         width: 10rem;
-        float: right;
-        font-size: 1.8rem;
+        font-size: 2rem;
         background: transparent;
         outline: none;
         border: none;
-        text-decoration: underline;
-        color: lightskyblue;
+        color: royalblue;
 
         &:disabled {
             opacity: .3;
         }
+    }
+
+    &__link {
+        display: block;
+        width: 11rem;
+        position: absolute;
+        top: 13rem;
+        right: 5rem;
+        text-decoration: none;
     }
 }

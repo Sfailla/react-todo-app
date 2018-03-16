@@ -6,10 +6,7 @@ export default class Authorize {
                 'Content-Type': 'application/json'
             },
             method: 'post',
-            body: JSON.stringify({
-                email,
-                password
-            })
+            body: JSON.stringify({ email, password })
         })
         .then(res => {
             return new Promise((resolve, reject) => {
@@ -28,10 +25,7 @@ export default class Authorize {
                 'Content-Type': 'application/json'
             },
             method: 'post',
-            body: JSON.stringify({
-                email,
-                password
-            })
+            body: JSON.stringify({ email, password })
         })
         .then(res => {
             return new Promise((resolve, reject) => {
@@ -77,7 +71,15 @@ export default class Authorize {
         return localStorage.getItem('TOKEN')
     }
 
-    logout = () => {
+    removeToken = () => {
         localStorage.removeItem('TOKEN')
+    }
+
+    logout = () => {
+        this.authFetch('/users/me/token', {
+            method: 'DELETE'
+        })
+        .then(res => console.log(res))
+        this.removeToken()
     }
 }

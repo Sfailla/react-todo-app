@@ -31,8 +31,8 @@ const LoginForm = ({ handleOnChange, handleOnSubmit, email, password }) => {
 }
 
 LoginForm.propTypes = {
-    handleOnChange: PropTypes.func,
-    handleOnSubmit: PropTypes.func,
+    handleOnChange: PropTypes.func.isRequired,
+    handleOnSubmit: PropTypes.func.isRequired,
     email: PropTypes.string.isRequired,
     password: PropTypes.string.isRequired
 }

@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import RegisterForm from './Register-Form'
 import TextComponent from './TextComponent'
 
+import AlertComponent from '../utils/AlertComponent'
 import Authorize from '../utils/MyAuth'
 
 export default class RegisterPage extends Component {
@@ -29,16 +30,20 @@ export default class RegisterPage extends Component {
 
         const { email, password } = this.state
         const { register, setToken } = this.Authorize
-        // this handles the registration
-        register(email, password)
-            .then(res => res.json())
-            .then(data => {
-                setToken(data.tokens[0].token)
-                setTimeout(() => { 
-                    this.props.history.push('/dashboard')
-                }, 500)
-            })
-            .catch(err => console.log(err));
+
+        if (email && password !== '') {
+
+            register(email, password)
+                .then(res => res.json())
+                .then(data => {
+                    setToken(data.tokens[0].token)
+                    setTimeout(() => this.props.history.push('/dashboard'), 300)
+                })
+                .catch(err => console.log(err))
+        } else {  
+            let error = 'Please fill out the form'
+            this.setState((prevState) => ({ errors: [...prevState.errors, error] }))
+        }
     }
 
     handleOnChange = (event) => {
@@ -48,25 +53,32 @@ export default class RegisterPage extends Component {
 
     render() {
         return (
-            <div className="App-Layout register">
-                <div className="register--left-box">
-                    <TextComponent
-                        subtitle={this.props.subtitle}
-                        title='TODO APP'
-                        needButton="LOGIN"
-                        location="/login"
-                        footerMessage="Copywrite Steven Failla 2018" />
-                </div>
-                <div className="register--right-box">
-                    <h1 className="Form-Type register__right-title">Register Here</h1>
-                    <RegisterForm 
-                        email={this.state.email}
-                        errors={this.state.errors}               
-                        password={this.state.password}
-                        confPassword={this.state.confPassword} 
-                        handleOnChange={this.handleOnChange} 
-                        warningPW="always use a secure password" />
-                    <p style={{ textAlign: 'center', whiteSpace: 'nowrap' }}>already registered? click <a href="/login" style={{ textDecoration: 'none' }}>here</a> to login</p>
+
+            <div>
+                {Array.isArray(this.state.errors) && this.state.errors.map((error, index) => {
+                    return <AlertComponent key={index} type="error" errors={error} />
+                })}
+                <div className="App-Layout register">
+                    <div className="register--left-box">
+                        <TextComponent
+                            subtitle={this.props.subtitle}
+                            title='TODO APP'
+                            needButton="LOGIN"
+                            location="/login"
+                            footerMessage="Copywrite Steven Failla 2018" />
+                    </div>
+                    <div className="register--right-box">
+                        <h1 className="Form-Type register__right-title">Register Here</h1>
+                        <RegisterForm
+                            email={this.state.email}
+                            errors={this.state.errors}
+                            password={this.state.password}
+                            confPassword={this.state.confPassword}
+                            handleOnSubmit={this.handleOnSubmit}
+                            handleOnChange={this.handleOnChange}
+                            warningPW="always use a secure password" />
+                        <p style={{ textAlign: 'center', whiteSpace: 'nowrap' }}>already registered? click <a href="/login" style={{ textDecoration: 'none' }}>here</a> to login</p>
+                    </div>
                 </div>
             </div>
         )
