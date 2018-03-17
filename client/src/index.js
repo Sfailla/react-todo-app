@@ -5,10 +5,10 @@ import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-d
 
 import './styles/index.scss'
 
-import RegisterPage from './components/RegisterPage'
-import LoginPage from './components/LoginPage'
-import Dashboard from './components/Dashboard'
-import NotFoundPage from './components/NotFoundPage'
+import RegisterPage from './pages/RegisterPage'
+import LoginPage from './pages/LoginPage'
+import Dashboard from './pages/Dashboard'
+import NotFoundPage from './pages/NotFoundPage'
 
 import registerServiceWorker from './registerServiceWorker'
 

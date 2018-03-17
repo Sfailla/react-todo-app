@@ -2,10 +2,14 @@ import React, { Component } from 'react'
 
 import Authorize from '../utils/MyAuth'
 
-import TodoComponent from './TodoComponent'
+import TodoComponent from '../components/TodoComponent'
+import DashboardComponent from '../components/DashboardComponent'
 
 
 export default class Dashboard extends Component {
+    state = {
+        todos: []
+    }
 
     Authorize = new Authorize()
 
@@ -14,22 +18,20 @@ export default class Dashboard extends Component {
         setTimeout(() => { return this.props.history.push('/login') }, 250)
     }
 
+    handleRemoveAll = () => {
+        this.setState(() => ({ todos: [] }))
+    }
+
     render() {
         return (
             <div className="App-Layout dashboard"> 
                 <div className="dashboard--left-box">
-                    <TodoComponent />
+                    <TodoComponent
+                        handleRemoveAll={this.handleRemoveAll} />
                 </div>
                 <div className="dashboard--right-box">
-                    <div className="dashboard__wrapper"> 
-                        <div className="dashboard__header">
-                            <h1 className="dashboard__title">Dashboard</h1>
-                        </div>
-                        <div className="dashboard__container">
-                            <button onClick={this.handleLogOut}>SIGN OUT</button>
-                            <button>REMOVE ALL</button>
-                        </div>
-                    </div>
+                    <DashboardComponent
+                        handleLogOut={this.handleLogOut} />
                 </div>
             </div>
         )

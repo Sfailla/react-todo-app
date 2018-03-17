@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
-import LoginForm from './Login-Form'
-import TextComponent from './TextComponent';
+import LoginForm from '../components/Login-Form'
+import TextComponent from '../components/TextComponent';
 
 import AlertComponent from '../utils/AlertComponent'
 import Authorize from '../utils/MyAuth'

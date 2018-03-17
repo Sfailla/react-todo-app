@@ -23,6 +23,18 @@ class TodoComponent extends Component {
             const option = event.target.elements.text.value.trim()
             const error = this.handleAddTodo(option)
 
+            // cannot figure out how to check for duplicates
+            // I want it to check by sentence instead of every word
+            
+            // this.state.todos.map(todo => {
+            //     let text = todo.text
+            //     if (text.indexOf(option) === -1) {
+            //         return console.log('unique option')
+            //     } else if (text.indexOf(option) > -1) {
+            //         return console.log('that option exists already')
+            //     }
+            // })
+
             if (!error) {
                 event.target.elements.text.value = ''
             }
@@ -52,7 +64,7 @@ class TodoComponent extends Component {
             }).catch(err => console.log(err))
     }
 
-    handleAddTodo = (option) => {
+    handleAddTodo = (option) => {        
         this.Authorize.authFetch('/todos', {
             method: 'POST',
             body: JSON.stringify({ text: this.state.todoText })
@@ -93,7 +105,7 @@ class TodoComponent extends Component {
                             name="text"
                             onChange={this.handleOnChange}
                             placeholder="please enter text" />
-                        <button type="submit" className="todo__button">
+                        <button type="submit" className="circle-button todo__button">
                             <Icon25 icon="add" style={{fill: '#25b999' }} />
                         </button>
                     </div>
@@ -102,13 +114,14 @@ class TodoComponent extends Component {
                 <div className="todo__container">
                     {this.state.errors.length > 0 && <p className="todo__error">{this.state.errors}</p>}
                     {!this.state.todos.length ? <p className="todo__title">Please enter a Todo to get started!</p> :
+                    
                     Array.isArray(this.state.todos) && 
                     this.state.todos.length && 
                     this.state.todos.map((todo, index) => (
                         <Todo key={todo._id} 
-                            todo={todo.text} 
-                            completed={todo.completed}
-                            handleRemoveTodo={() => this.handleRemoveTodo(todo._id)} />
+                              todo={todo.text} 
+                              completed={todo.completed}
+                              handleRemoveTodo={() => this.handleRemoveTodo(todo._id)} />
                         ))}
                 </div>
             </div>
