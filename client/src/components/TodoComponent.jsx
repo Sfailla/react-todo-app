@@ -27,12 +27,12 @@ const TodoComponent = (props) => {
                 {props.errors.length > 0 && <p className="todo__error">{props.errors}</p>}
                 {!props.todos.length ? <p className="todo__title">Please enter a Todo to get started!</p> :
                 
-                Array.isArray(props.todos) && 
                 props.todos.length && 
-                props.todos.map((todo, index) => (
+                props.todos.map(todo => (
                     <Todo key={todo._id} 
-                            todo={todo.text} 
+                            todo={todo.text}
                             completed={todo.completed}
+                            handleCompletedTodos={() => props.handleCompletedTodos(todo._id)}
                             handleRemoveTodo={() => props.handleRemoveTodo(todo._id)} />
                     ))}
             </div>

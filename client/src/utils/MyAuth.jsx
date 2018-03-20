@@ -79,7 +79,6 @@ export default class Authorize {
         this.authFetch('/users/me/token', {
             method: 'DELETE'
         })
-        .then(res => console.log(res))
         this.removeToken()
     }
 }

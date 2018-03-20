@@ -8,11 +8,11 @@ const User = require('../models/user')
 const Todo = require('../models/todo')
 const authenticate = require('../middleware/authenticate')
 
-const router = express.Router()
+const server = express.Router()
 
 
-// POST route for making a TODO
-router.post('/', authenticate, (req, res) => {
+// route for making a TODO
+server.post('/', authenticate, (req, res) => {
     const todo = new Todo({
         text: req.body.text,
         _creator: req.user._id
@@ -21,8 +21,8 @@ router.post('/', authenticate, (req, res) => {
         .then(doc => res.send(doc))
         .catch(err => res.status(400).send(err))
 })
-// GET route for listing all TODOs
-router.get('/', authenticate, (req, res) => {
+// route for listing all TODOs
+server.get('/', authenticate, (req, res) => {
     Todo.find({ _creator: req.user._id })
         .then(todos => {
             res.send({ todos })
@@ -30,8 +30,17 @@ router.get('/', authenticate, (req, res) => {
             res.status(400).send(err)
         })
 })
-// GET route for single TODO by ID
-router.get('/:id', authenticate, (req, res) => {
+// route to delete all todos for auth user
+server.delete('/removeAll', authenticate, (req, res) => {
+    Todo.remove({ _creator: req.user._id })
+        .then(todos => {
+            res.send({ todos: [] })
+        }).catch(err => {
+            res.status(400).send(err)
+        })
+})
+// route for single TODO by ID
+server.get('/:id', authenticate, (req, res) => {
     const { id } = req.params
     if (!ObjectId.isValid(id)) {
         return res.status(404).send()
@@ -46,8 +55,8 @@ router.get('/:id', authenticate, (req, res) => {
         })
         .catch(err => res.status(400).send(err))
 })
-// DELETE route for removing TODO by ID
-router.delete('/:id', authenticate, (req, res) => {
+// route for removing TODO by ID
+server.delete('/:id', authenticate, (req, res) => {
     const { id } = req.params
     if (!ObjectId.isValid(id)) {
         return res.status(404).send()
@@ -59,18 +68,14 @@ router.delete('/:id', authenticate, (req, res) => {
         })
         .catch(err => res.status(400).send(err))
 })
-
-router.patch('/:id', authenticate, (req, res) => {
+// route to compolete or update a todo 
+server.patch('/:id', authenticate, (req, res) => {
     const { id } = req.params
-    // using pick from lodash is very useful when dealing with 
-    // sending user info.  it allows you to pick the items 
-    // the user has access to. rather than give access to entire obj
     const body = _.pick(req.body, ['text', 'completed'])
 
     if (!ObjectId.isValid(id)) {
         return res.status(404).send()
-    }
-    if (_.isBoolean(body.completed) && body.completed) {
+    } else if (_.isBoolean(body.completed) && body.completed) {
         body.completedAt = new Date().getTime()
     } else {
         body.completed = false
@@ -84,6 +89,7 @@ router.patch('/:id', authenticate, (req, res) => {
             }
             res.send({ todo })
         })
+        .catch(err => res.status(404).send(err))
 })
 
-module.exports = router
+module.exports = server

@@ -10,6 +10,7 @@ export default class Dashboard extends Component {
     state = {
         todos: [],
         errors: [],
+        completedTodos: [],
         todoText: '',
         completed: false,
     }
@@ -22,28 +23,13 @@ export default class Dashboard extends Component {
         if (this.state.todoText !== '') {
             const option = event.target.elements.text.value.trim()
             const error = this.handleAddTodo(option)
-
-            // cannot figure out how to check for duplicates
-            // I want it to check by sentence instead of every word
-
-            // this.state.todos.map(todo => {
-            //     let text = todo.text
-            //     if (text.indexOf(option) === -1) {
-            //         return console.log('unique option')
-            //     } else if (text.indexOf(option) > -1) {
-            //         return console.log('that option exists already')
-            //     }
-            // })
-
             if (!error) {
                 event.target.elements.text.value = ''
             }
         } else {
-            console.log('empty input field')
             let errors = 'Please enter a Todo first'
             this.setState(() => ({ errors }))
         }
-
     }
 
     handleOnChange = (event) => {
@@ -55,13 +41,23 @@ export default class Dashboard extends Component {
         this.Authorize.authFetch('/todos', { method: 'GET' })
             .then(res => res.json())
             .then(todo => {
-                const fetchTodos = todo.todos
-                return fetchTodos.map(fetchData => {
+                let fetchTodos = todo.todos
+
+                fetchTodos.map(todos => {
                     return this.setState((prevState) => ({
-                        todos: [fetchData].concat([...prevState.todos])
+                        todos: [todos].concat([...prevState.todos])
                     }))
                 })
-            }).catch(err => console.log(err))
+                const filteredTodo = [...this.state.todos].filter(todos => todos.completed === true)
+
+                filteredTodo.map(todos => {
+                    return this.setState((prevState) => ({
+                        todos: [...prevState.todos].filter(todos => todos.completed !== true),
+                        completedTodos: [...this.state.completedTodos, todos]
+                    }))
+                })               
+            })
+            .catch(err => console.log(err))
     }
 
     handleAddTodo = (option) => {
@@ -69,24 +65,26 @@ export default class Dashboard extends Component {
             method: 'POST',
             body: JSON.stringify({ text: this.state.todoText })
         })
-            .then(res => res.json())
-            .then(todo => {
-                return this.setState((prevState) => ({
-                    todos: [todo].concat([...prevState.todos])
-                }))
-            }).catch(err => console.log(err))
+        .then(res => res.json())
+        .then(todo => {
+            return this.setState((prevState) => ({
+                todos: [todo].concat([...prevState.todos])
+            }))
+        })
+        .catch(err => console.log(err))
     }
 
     handleRemoveTodo = (id) => {
         this.Authorize.authFetch(`/todos/${id}`, { method: 'delete' })
             .then(res => res.json())
             .then(data => {
+                console.log(data)
                 return this.setState((prevState) => ({
-                    todos: [...prevState.todos].filter((todo) => {
-                        return todo._id !== id
-                    })
+                    todos: [...prevState.todos].filter((todo) => todo._id !== data._id),
+                    completedTodos: [...prevState.completedTodos].filter((todo) => todo._id !== data._id)
                 }))
-            }).catch(err => console.log(err))
+            })       
+            .catch(err => console.log(err))
     }
 
     handleLogOut = () => {
@@ -95,7 +93,34 @@ export default class Dashboard extends Component {
     }
 
     handleRemoveAll = () => {
-        this.setState(() => ({ todos: [] }))
+        this.Authorize.authFetch(`/todos/removeAll`, { 
+            method: 'DELETE' 
+        })
+        .then(res => res.json())
+        .then(todo => {
+
+            const todos = todo.todos
+            return this.setState(() => ({ todos, completedTodos: todos }))
+        })
+    }
+
+    handleCompletedTodos = (id) => {
+        this.Authorize.authFetch(`/todos/${id}`, {
+            method: 'PATCH',
+            body: JSON.stringify({ completed: true })
+        })
+        .then(res => res.json())
+        .then(data => {
+
+            const filteredTodo = [...this.state.todos].filter((todo) => todo._id === data.todo._id)
+            filteredTodo.map(todo => {
+                return this.setState((prevState) => ({
+                    todos: [...this.state.todos].filter((todo) => todo._id !== id),
+                    completedTodos: [...prevState.completedTodos, todo]
+                }))
+            })
+        })
+        .catch(err => console.log(err))
     }
 
     componentDidMount = () => {
@@ -104,7 +129,7 @@ export default class Dashboard extends Component {
 
     render() {
         return (
-            <div className="App-Layout dashboard"> 
+            <div className="App-Layout dashboard">
                 <div className="dashboard--left-box">
                     <TodoComponent
                         errors={this.state.errors}
@@ -116,11 +141,14 @@ export default class Dashboard extends Component {
                         handleAddTodo={this.handleAddTodo}
                         handleGetTodos={this.handleGetTodos}
                         handleRemoveTodo={this.handleRemoveTodo}
-                        handleRemoveAll={this.handleRemoveAll} />
+                        handleCompletedTodos={this.handleCompletedTodos} />
                 </div>
                 <div className="dashboard--right-box">
                     <DashboardComponent
-                        handleLogOut={this.handleLogOut} />
+                        handleLogOut={this.handleLogOut}
+                        handleRemoveAll={this.handleRemoveAll}
+                        handleRemoveTodo={this.handleRemoveTodo}
+                        completedTodos={this.state.completedTodos} />
                 </div>
             </div>
         )

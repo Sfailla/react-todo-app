@@ -27,7 +27,8 @@ TextComponent.propTypes = {
     ]),
     location: PropTypes.string,
     needButton: PropTypes.oneOfType([
-        PropTypes.bool, PropTypes.string
+        PropTypes.bool, 
+        PropTypes.string
     ]),
     footerMessage: PropTypes.string
 }

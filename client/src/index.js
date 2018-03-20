@@ -27,17 +27,12 @@ const checkAuth = () => {
     }
     return true
 }
-
+// HOC for Authenticated
 const AuthRoute = ({ component: Component, ...rest }) => (
     <Route {...rest} render={props => (
-        checkAuth() ? (
-            <Component {...props} /> 
-        ) : (
-            <Redirect to={{ pathname: '/login' }} />
-        )
+        checkAuth() ? <Component {...props} /> : <Redirect to={{ pathname: '/login' }} />
     )} />
 )
-
 
 const routes = (
     <Router>

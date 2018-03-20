@@ -8,17 +8,16 @@ const User = require('../models/user')
 // const Todo = require('../models/todos')
 const authenticate = require('../middleware/authenticate')
 
-const router = express.Router()
+const server = express.Router()
 
 
-router.get('/me', authenticate, (req, res) => {
+server.get('/me', authenticate, (req, res) => {
     res.send(req.user)
 })
-// POST route for creating a new USER
-router.post('/', (req, res) => {
+// route for creating a new USER
+server.post('/', (req, res) => {
     const body = _.pick(req.body, ['email', 'password'])
     const user = new User(body)
-
     // the way this is set up; when a user logs in they are given a token
     // then they are automatically logged in.  when they log out and it deletes 
     // their token. they get there token back when they hit the login route...
@@ -31,12 +30,9 @@ router.post('/', (req, res) => {
         })
         .catch(err => res.status(400).send(err))
 })
-
-router.post('/login', (req, res) => {
+// route for logging in
+server.post('/login', (req, res) => {
     const body = _.pick(req.body, ['email', 'password'])
-    // req.body.email
-    // req.body.password
-
     User.findByCredentials(body.email, body.password)
         .then(user => {
             user.generateAuthToken()
@@ -45,8 +41,8 @@ router.post('/login', (req, res) => {
                 })
         }).catch(err => res.status(400).send(err))
 })
-
-router.delete('/me/token', authenticate, (req, res) => {
+// route to delete token
+server.delete('/me/token', authenticate, (req, res) => {
     req.user.removeToken(req.token)
         .then(() => {
             res.status(200).send()
@@ -55,4 +51,4 @@ router.delete('/me/token', authenticate, (req, res) => {
         })
 })
 
-module.exports = router
+module.exports = server
