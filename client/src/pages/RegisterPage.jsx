@@ -28,19 +28,24 @@ export default class RegisterPage extends Component {
     handleOnSubmit = (event) => {
         event.preventDefault()
 
-        const { email, password } = this.state
+        const { email, password, confPassword } = this.state
         const { register, setToken } = this.Authorize
 
-        if (email && password !== '') {
+        if (email && password && confPassword !== '') {
 
-            register(email, password)
-                .then(res => res.json())
-                .then(data => {
-                    setToken(data.tokens[0].token)
-                    setTimeout(() => this.props.history.push('/dashboard'), 300)
-                })
-                .catch(err => console.log(err))
-        } else {  
+            if (this.handleConfirmPassword(password, confPassword)) {
+                register(email, password)
+                    .then(res => res.json())
+                    .then(data => {
+                        setToken(data.tokens[0].token)
+                        setTimeout(() => this.props.history.push('/dashboard'), 300)
+                    })
+                    .catch(err => console.log(err))
+            } else {
+                let error = 'passwords don\'t match'
+                this.setState((prevState) => ({ errors: [...prevState.errors, error] }))
+            }
+        } else {
             let error = 'Please fill out the form'
             this.setState((prevState) => ({ errors: [...prevState.errors, error] }))
         }
@@ -51,34 +56,39 @@ export default class RegisterPage extends Component {
         this.setState(() => ({ [name]: value }))
     }
 
-    render() {
-        return (
+    handleConfirmPassword = (password, confPassword) => {
+        if (password === confPassword) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-            <div>
-                {Array.isArray(this.state.errors) && this.state.errors.map((error, index) => {
-                    return <AlertComponent key={index} type="error" errors={error} />
-                })}
-                <div className="App-Layout register">
-                    <div className="register--left-box">
-                        <TextComponent
-                            subtitle={this.props.subtitle}
-                            title='TODO APP'
-                            needButton="LOGIN"
-                            location="/login"
-                            footerMessage="Copywrite Steven Failla 2018" />
-                    </div>
-                    <div className="register--right-box">
-                        <h1 className="Form-Type register__right-title">Register Here</h1>
-                        <RegisterForm
-                            email={this.state.email}
-                            errors={this.state.errors}
-                            password={this.state.password}
-                            confPassword={this.state.confPassword}
-                            handleOnSubmit={this.handleOnSubmit}
-                            handleOnChange={this.handleOnChange}
-                            warningPW="always use a secure password" />
-                        <p style={{ textAlign: 'center', whiteSpace: 'nowrap' }}>already registered? click <a href="/login" style={{ textDecoration: 'none' }}>here</a> to login</p>
-                    </div>
+    render() {
+        return (                
+            <div className="App-Layout register">
+                <div className="register--left-box">
+                    <TextComponent
+                        subtitle={this.props.subtitle}
+                        title='TODO APP'
+                        needButton="LOGIN"
+                        location="/login"
+                        footerMessage="&copy; Steven Failla 2018" />
+                </div>
+                <div className="register--right-box">
+                    <h1 className="Form-Type register__right-title">Register Here</h1>
+                        {this.state.errors.map((error, index) => {
+                            return <AlertComponent key={index} type="error" errors={error} />
+                        })}
+                    <RegisterForm
+                        email={this.state.email}
+                        errors={this.state.errors}
+                        password={this.state.password}
+                        confPassword={this.state.confPassword}
+                        handleOnSubmit={this.handleOnSubmit}
+                        handleOnChange={this.handleOnChange}
+                        warningPW="always use a secure password" />
+                    <p style={{ textAlign: 'center', whiteSpace: 'nowrap' }}>already registered? click <a href="/login" style={{ textDecoration: 'none' }}>here</a> to login</p>
                 </div>
             </div>
         )

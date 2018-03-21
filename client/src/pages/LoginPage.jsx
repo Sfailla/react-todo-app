@@ -42,7 +42,7 @@ export default class LoginPage extends Component {
                 .catch(err => console.log(err));
         } else {
             let error = 'Please fill out the form'
-            this.setState((prevState) => ({ errors: [...prevState.errors].concat([error]) }))
+            this.setState((prevState) => ({ errors: [...prevState.errors, error] }))
         }
     }
 
@@ -53,32 +53,30 @@ export default class LoginPage extends Component {
 
     render() {
         return (
-            <div>
-                {Array.isArray(this.state.errors) && this.state.errors.map((error, index) => {
-                    return <AlertComponent key={index} type="error" errors={error} />
-                }) }
-                <div className="App-Layout login">
-                    <div className="login--left-box">
-                        <TextComponent
-                            title="LOGIN PAGE"
-                            subtitle={this.props.subtitle}
-                            needButton={false}
-                            footerMessage="...You're almost there. Login to get started!" />
-                    </div>
-                    <div className="login--right-box">
-                        <h2 className="Form-Type">Enter email and password to login</h2>
-                        <a href="/dashboard" className="login__link">
-                            <button className="login__dashboard-button" disabled={!this.Authorize.isLoggedIn()} >Dashboard</button>
-                        </a>
-                        <LoginForm
-                            email={this.state.email}
-                            password={this.state.password}
-                            errors={this.state.errors}
-                            redirectTo={this.state.redirectTo}
-                            handleOnSubmit={this.handleOnSubmit}
-                            handleOnChange={this.handleOnChange} />
-                        <p style={{ textAlign: 'center' }}>Are you registered? if not click <a href="/">here</a></p>
-                    </div>
+            <div className="App-Layout login">
+                <div className="login--left-box">
+                    <TextComponent
+                        title="LOGIN PAGE"
+                        subtitle={this.props.subtitle}
+                        needButton={false}
+                        footerMessage="...You're almost there. Login to get started!" />
+                </div>
+                <div className="login--right-box">
+                    <h2 className="Form-Type">Enter email and password to login</h2>
+                    <a href="/dashboard" className="login__link">
+                        <button className="login__dashboard-button" disabled={!this.Authorize.isLoggedIn()} >Dashboard</button>
+                    </a>
+                    {Array.isArray(this.state.errors) && this.state.errors.map((error, index) => {
+                        return <AlertComponent key={index} type="error" errors={error} />
+                    })}
+                    <LoginForm
+                        email={this.state.email}
+                        password={this.state.password}
+                        errors={this.state.errors}
+                        redirectTo={this.state.redirectTo}
+                        handleOnSubmit={this.handleOnSubmit}
+                        handleOnChange={this.handleOnChange} />
+                    <p style={{ textAlign: 'center' }}>Are you registered? if not click <a href="/">here</a></p>
                 </div>
             </div>
         )

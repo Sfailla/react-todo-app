@@ -20,16 +20,13 @@ export default class Dashboard extends Component {
     handleOnSubmit = (event) => {
         event.preventDefault()
 
-        if (this.state.todoText !== '') {
-            const option = event.target.elements.text.value.trim()
-            const error = this.handleAddTodo(option)
-            if (!error) {
-                event.target.elements.text.value = ''
-            }
-        } else {
-            let errors = 'Please enter a Todo first'
-            this.setState(() => ({ errors }))
+        const option = event.target.elements.text.value.trim()
+        const errors = this.handleAddTodo(option)
+        if (!errors) {
+            event.target.elements.text.value = ''
         }
+        console.log(errors)
+        this.setState(() => ({ errors, className: 'alert__error fade-in' }))
     }
 
     handleOnChange = (event) => {
@@ -61,24 +58,30 @@ export default class Dashboard extends Component {
     }
 
     handleAddTodo = (option) => {
-        this.Authorize.authFetch('/todos', {
-            method: 'POST',
-            body: JSON.stringify({ text: this.state.todoText })
-        })
-        .then(res => res.json())
-        .then(todo => {
-            return this.setState((prevState) => ({
-                todos: [todo].concat([...prevState.todos])
-            }))
-        })
-        .catch(err => console.log(err))
+        const mappedTodos = this.state.todos.map(todo => todo.text)
+        if (!option) {
+            return 'please enter an option'
+        }  else if (mappedTodos.indexOf(option) !== -1) {
+            return `the option: ${option} already exists`
+        } else {
+            this.Authorize.authFetch('/todos', {
+                method: 'POST',
+                body: JSON.stringify({ text: this.state.todoText })
+            })
+            .then(res => res.json())
+            .then(todo => {
+                return this.setState((prevState) => ({
+                    todos: [todo].concat([...prevState.todos])
+                }))
+            })
+            .catch(err => console.log(err))
+        }
     }
 
     handleRemoveTodo = (id) => {
         this.Authorize.authFetch(`/todos/${id}`, { method: 'delete' })
             .then(res => res.json())
             .then(data => {
-                console.log(data)
                 return this.setState((prevState) => ({
                     todos: [...prevState.todos].filter((todo) => todo._id !== data._id),
                     completedTodos: [...prevState.completedTodos].filter((todo) => todo._id !== data._id)
@@ -135,6 +138,7 @@ export default class Dashboard extends Component {
                         errors={this.state.errors}
                         todos={this.state.todos}
                         todoText={this.state.todoText}
+                        className={this.state.className}
                         completed={this.state.completed}
                         handleOnChange={this.handleOnChange}
                         handleOnSubmit={this.handleOnSubmit}

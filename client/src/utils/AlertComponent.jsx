@@ -1,32 +1,47 @@
-import React from 'react'
+import React, { Component } from 'react'
 
 
-const alertStyles = {
-    width: '25%',
-    margin: '0 auto',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: '5px',
-    padding: '1rem'
+// const alertStyles = {
+//     width: '25%',
+//     margin: '0 auto',
+//     display: 'flex',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     borderRadius: '.5rem',
+//     padding: '1rem',
+//     transition: 'opacity 500ms ease-in'
 
-}
+// }
 
-const AlertComponent = ({ type, success, errors }) => {
 
-    if (type === 'error') {
+class AlertComponent extends Component {
+    state = {
+        className: this.props.className || 'alert__error fade-in',
+        alert: false,
+        errors: this.props.errors
+    }
+
+    handleCloseAlert = async () => {
+        await this.setState(() => ({ className: 'alert__error fade-out' , alert: false }))
+        await setTimeout(() => {
+            this.setState(() => ({ className: 'not-active', errors: [] }))
+        }, 1100)
+    }
+
+    render() {
         return (
-            <div style={{ ...alertStyles, backgroundColor: 'rgb(241, 214, 214)', color: '#AF4442', border: '1px solid #AF4442', }}>
-                <p>{errors}</p></div>
-        )
-    } else if (type === 'success') {
-        return (
-            <div style={{ ...alertStyles, backgroundColor: 'rgb(211, 230, 203)', color: '#3C763D', border: '1px solid #3C763D', }}>
-                <p>{success}</p>
-            </div >
+            this.props.type === 'error' ?
+                <div className={this.state.className}>
+                    <p>{this.state.errors}</p>
+                    <button className="alert__error-button" onClick={this.handleCloseAlert}>X</button>
+                </div>
+                :
+                <div className={this.state.className}>
+                    <p>{this.props.success}</p>
+                </div>
         )
     }
-    
 }
+
 
 export default AlertComponent

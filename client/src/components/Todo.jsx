@@ -3,15 +3,15 @@ import PropTypes from 'prop-types'
 
 import Icon25 from '../utils/SVGComponent'
 
-const Todo = (props) => {
+const Todo = ({ todoText, todoID, handleRemoveTodo, handleCompletedTodos }) => {
     return (
         <div className="todo__todo">
-            <p className="todo__todoText">{props.todo}</p>
+            <p className="todo__todoText">{todoText}</p>
         <div className="todo__button-container">
-            <button className="todo__remove" onClick={() => props.handleRemoveTodo(props.todo)}>
+            <button className="todo__remove" onClick={() => handleRemoveTodo(todoID)}>
                 <Icon25 icon="trash" />
             </button>
-            <button className="todo__completed" onClick={() => props.handleCompletedTodos(props.todo)}>
+            <button className="todo__completed" onClick={() => handleCompletedTodos(todoID)}>
                     <Icon25 icon="completed" className="todo__svg-completed" />
             </button>
         </div>
