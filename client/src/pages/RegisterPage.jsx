@@ -3,8 +3,8 @@ import React, { Component } from 'react'
 import RegisterForm from '../components/Register-Form'
 import TextComponent from '../components/TextComponent'
 
-import AlertComponent from '../utils/AlertComponent'
 import Authorize from '../utils/MyAuth'
+import Flash from '../utils/Flash'
 
 export default class RegisterPage extends Component {
     static defaultProps = {
@@ -19,8 +19,7 @@ export default class RegisterPage extends Component {
         email: '',
         password: '',
         confPassword: '',
-        errors: [],
-        redirectTo: false
+        errors: []
     }
 
     Authorize = new Authorize()
@@ -32,7 +31,6 @@ export default class RegisterPage extends Component {
         const { register, setToken } = this.Authorize
 
         if (email && password && confPassword !== '') {
-
             if (this.handleConfirmPassword(password, confPassword)) {
                 register(email, password)
                     .then(res => res.json())
@@ -57,10 +55,15 @@ export default class RegisterPage extends Component {
     }
 
     handleConfirmPassword = (password, confPassword) => {
-        if (password === confPassword) {
-            return true;
-        } else {
-            return false;
+        const checkPW = (password === confPassword) ? true : false
+        return checkPW
+    }
+
+    componentDidUpdate = (prevState) => {
+        if (this.state.errors.length) {
+            setTimeout(() => {
+                return this.setState(() => ({ errors: [] }))
+            }, 1500)
         }
     }
 
@@ -73,13 +76,13 @@ export default class RegisterPage extends Component {
                         title='TODO APP'
                         needButton="LOGIN"
                         location="/login"
-                        footerMessage="&copy; Steven Failla 2018" />
+                        footerMessage="Steven Failla &copy; 2018" />
                 </div>
                 <div className="register--right-box">
                     <h1 className="Form-Type register__right-title">Register Here</h1>
-                        {this.state.errors.map((error, index) => {
-                            return <AlertComponent key={index} type="error" errors={error} />
-                        })}
+                    {this.state.errors.length ? this.state.errors.map(error => {
+                        return <Flash msgType="error" message={error} duration={1500} />
+                    }) : null}
                     <RegisterForm
                         email={this.state.email}
                         errors={this.state.errors}

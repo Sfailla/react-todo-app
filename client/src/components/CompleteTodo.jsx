@@ -13,5 +13,4 @@ const CompleteTodo = ({ todoText, todoID, handleRemoveTodo }) => {
         </div>
     )
 }
-
 export default CompleteTodo

@@ -1,9 +1,9 @@
 import React from 'react'
 
-import AlertComponent from '../utils/AlertComponent'
-import Icon25 from '../utils/SVGComponent'
-
 import Todo from './Todo'
+
+import Flash from '../utils/Flash'
+import Icon25 from '../utils/SVGComponent'
 
 
 const TodoComponent = (props) => {
@@ -21,8 +21,9 @@ const TodoComponent = (props) => {
             </form>
 
             <div className="todo__container">
-                {/* {props.errors.length ? <AlertComponent className={props.className} type="error" errors={props.errors} />
-                 : null } */}
+                {props.errors.length ? props.errors.map(error => {
+                    return <Flash msgType="error" message={error} duration={1500} />
+                }) : null}
                 {!props.todos.length ? <p className="todo__title">Please enter a Todo to get started!</p> :
                   props.todos.length && props.todos.map(todo => (
                     <Todo key={todo._id} 

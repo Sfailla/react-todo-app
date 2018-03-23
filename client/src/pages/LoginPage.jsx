@@ -3,8 +3,8 @@ import React, { Component } from 'react'
 import LoginForm from '../components/Login-Form'
 import TextComponent from '../components/TextComponent';
 
-import AlertComponent from '../utils/AlertComponent'
 import Authorize from '../utils/MyAuth'
+import Flash from '../utils/Flash'
 
 
 export default class LoginPage extends Component {
@@ -19,8 +19,7 @@ export default class LoginPage extends Component {
         email: '',
         password: '',
         success: [],
-        errors: [],
-        redirectTo: false
+        errors: []
     }
 
     Authorize = new Authorize()
@@ -31,15 +30,24 @@ export default class LoginPage extends Component {
         const { login, setToken } = this.Authorize
         const { email, password } = this.state
 
-        if (email && password  !== '') {
+        if (email && password !== '') {
 
             login(email, password)
-                .then(res => res.json())
+                .then(res => {
+                    if (res.status === 400) {
+                        let error = 'invalid credentials'
+                        this.setState(() => ({ errors: [...this.state.errors, error] }))
+                    } else if (res.status >= 200 && res.status <= 350) {
+                        return res.json()
+                    }
+                })
                 .then(data => {
                     setToken(data.tokens[0].token)
                     setTimeout(() => { this.props.history.push('/dashboard') }, 300)
                 })
-                .catch(err => console.log(err));
+                .catch(err => {
+                    if (err) throw err
+                })
         } else {
             let error = 'Please fill out the form'
             this.setState((prevState) => ({ errors: [...prevState.errors, error] }))
@@ -49,6 +57,14 @@ export default class LoginPage extends Component {
     handleOnChange = (event) => {
         const { name, value } = event.target
         this.setState(() => ({ [name]: value }))
+    }
+
+    componentDidUpdate = (prevState) => {
+        if (this.state.errors.length > 0) {
+            setTimeout(() => {
+                return this.setState(() => ({ errors: [] }))
+            }, 1500)
+        }
     }
 
     render() {
@@ -66,9 +82,9 @@ export default class LoginPage extends Component {
                     <a href="/dashboard" className="login__link">
                         <button className="login__dashboard-button" disabled={!this.Authorize.isLoggedIn()} >Dashboard</button>
                     </a>
-                    {Array.isArray(this.state.errors) && this.state.errors.map((error, index) => {
-                        return <AlertComponent key={index} type="error" errors={error} />
-                    })}
+                    {this.state.errors.length ? this.state.errors.map(error => {
+                        return <Flash msgType="error" message={error} duration={1500} />
+                    }) : null}
                     <LoginForm
                         email={this.state.email}
                         password={this.state.password}

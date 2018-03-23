@@ -21,12 +21,12 @@ export default class Dashboard extends Component {
         event.preventDefault()
 
         const option = event.target.elements.text.value.trim()
-        const errors = this.handleAddTodo(option)
-        if (!errors) {
+        const error = this.handleAddTodo(option)
+        if (!error) {
             event.target.elements.text.value = ''
         }
-        console.log(errors)
-        this.setState(() => ({ errors, className: 'alert__error fade-in' }))
+        console.log(error)
+        this.setState((prevState) => ({ errors: [...prevState.errors, error] }))
     }
 
     handleOnChange = (event) => {
@@ -59,10 +59,11 @@ export default class Dashboard extends Component {
 
     handleAddTodo = (option) => {
         const mappedTodos = this.state.todos.map(todo => todo.text)
+        const mappedCompleteTodos = this.state.completedTodos.map(todo => todo.text)
         if (!option) {
             return 'please enter an option'
-        }  else if (mappedTodos.indexOf(option) !== -1) {
-            return `the option: ${option} already exists`
+        } else if (mappedTodos.indexOf(option) !== -1 || mappedCompleteTodos.indexOf(option) !== -1) {
+            return `${option} already exists`
         } else {
             this.Authorize.authFetch('/todos', {
                 method: 'POST',
@@ -101,7 +102,6 @@ export default class Dashboard extends Component {
         })
         .then(res => res.json())
         .then(todo => {
-
             const todos = todo.todos
             return this.setState(() => ({ todos, completedTodos: todos }))
         })
@@ -114,7 +114,6 @@ export default class Dashboard extends Component {
         })
         .then(res => res.json())
         .then(data => {
-
             const filteredTodo = [...this.state.todos].filter((todo) => todo._id === data.todo._id)
             filteredTodo.map(todo => {
                 return this.setState((prevState) => ({
@@ -124,6 +123,14 @@ export default class Dashboard extends Component {
             })
         })
         .catch(err => console.log(err))
+    }
+
+    componentDidUpdate = (prevState) => {
+        if (this.state.errors.length) {
+            setTimeout(() => {
+                return this.setState(() => ({ errors: [] }))
+            }, 2000)
+        }
     }
 
     componentDidMount = () => {
