@@ -34,16 +34,22 @@ export default class LoginPage extends Component {
 
             login(email, password)
                 .then(res => {
-                    if (res.status === 400) {
+                    if (res.status === 400 || res.status > 350) {
                         let error = 'invalid credentials'
                         this.setState(() => ({ errors: [...this.state.errors, error] }))
+                        this.props.history.push('/login')
                     } else if (res.status >= 200 && res.status <= 350) {
                         return res.json()
                     }
                 })
                 .then(data => {
-                    setToken(data.tokens[0].token)
-                    setTimeout(() => { this.props.history.push('/dashboard') }, 300)
+                    const token = data.tokens[0].token;
+                    if (token) {
+                        setToken(token)
+                        setTimeout(() => { this.props.history.push('/dashboard') }, 300)
+                    } else {
+                        this.props.history.push('/login')
+                    }
                 })
                 .catch(err => {
                     if (err) throw err

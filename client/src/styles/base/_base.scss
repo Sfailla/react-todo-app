@@ -1,4 +1,6 @@
-* {
+*,
+*::before,
+*::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -7,6 +9,14 @@
 html {
     font-size: 62.5%;
     font-family: 'Roboto','sans-serif';
+
+    @media all and (max-width: 75em) {
+        font-size: 50%;
+    }
+
+    @media all and (max-width: 50em) {
+        font-size: 40%;
+    }
 }
 
 body {

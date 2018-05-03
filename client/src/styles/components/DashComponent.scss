@@ -182,10 +182,15 @@
         display: flex;
         align-items: center;
         padding-left: 1rem;
-        box-shadow: 0 3px 7px rgba($black, .5);
+        margin-top: 5px;
+        box-shadow: 3px 3px .6rem rgba($black, .5);
 
         &:not(:last-of-type) {
             margin-bottom: 1rem;
+        }
+
+        @media all and (max-width: 75em) {
+            height: 4rem;
         }
     }
 }
