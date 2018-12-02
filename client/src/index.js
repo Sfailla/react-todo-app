@@ -1,50 +1,17 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import decode from 'jwt-decode'
-import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom"
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-import './styles/index.scss'
+import { BrowserRouter as Router } from 'react-router-dom';
+import Layout from './layout/Layout';
 
-import RegisterPage from './pages/RegisterPage'
-import LoginPage from './pages/LoginPage'
-import Dashboard from './pages/Dashboard'
-import NotFoundPage from './pages/NotFoundPage'
+import './styles/index.scss';
+import registerServiceWorker from './registerServiceWorker';
 
-import registerServiceWorker from './registerServiceWorker'
+const App = () => (
+	<Router>
+		<Layout />
+	</Router>
+);
 
-const checkAuth = () => {
-    const token = localStorage.getItem('TOKEN')
-    if (!token) {
-        return false
-    }
-    try {
-        const { exp } = decode(token)
-        if (exp > new Date().getTime() / 1000) {
-            return false
-        }
-    } catch(e) {
-        return false
-    }
-    return true
-}
-// HOC for Authenticated
-const AuthRoute = ({ component: Component, ...rest }) => (
-    <Route {...rest} render={props => (
-        checkAuth() ? <Component {...props} /> : <Redirect to={{ pathname: '/login' }} />
-    )} />
-)
-
-const routes = (
-    <Router>
-        <Switch>
-            <Route exact path='/' component={RegisterPage} />
-            <Route exact path='/login' component={LoginPage} />
-            <AuthRoute exact path='/dashboard' component={Dashboard} />
-            <Route component={NotFoundPage} />
-        </Switch>        
-    </Router>
-)
-
-
-ReactDOM.render(routes, document.getElementById('root'))
-registerServiceWorker()
+ReactDOM.render(<App />, document.getElementById('root'));
+registerServiceWorker();

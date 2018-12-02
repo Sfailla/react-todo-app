@@ -1,9 +1,17 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-mongoose.Pomise = global.Promise
+mongoose.Pomise = global.Promise;
 
-mongoose.connect(process.env.MONGOOSE_URI)
-    .then(() => console.log('connection to MLAB established...'))
-    .catch(err => console.log(`${err.name} \n there is an error with mongoose connect: ${err.errmsg}`))
+mongoose
+	.connect(process.env.MONGOOSE_URI, {
+		useNewUrlParser: true,
+		useFindAndModify: false
+	})
+	.then(() => console.log('connection to MLAB established...'))
+	.catch(err =>
+		console.log(
+			`${err.name} \n there is an error with mongoose connect: ${err.errMsg}`
+		)
+	);
 
-module.exports = mongoose
+module.exports = mongoose;

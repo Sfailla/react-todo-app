@@ -4,7 +4,7 @@
   "description": "Im creating a react front-end for a todo app tutorial by Andrew Mead",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "start": "concurrently -k \"npm run server\" \"npm run client\"",
     "server": "nodemon server/server.js",
     "client": "cd client && npm start",
     "test-watch": "nodemon --exec \"npm test\"",
@@ -21,8 +21,7 @@
     "jsonwebtoken": "^8.1.1",
     "lodash": "^4.17.5",
     "mongoose": "^5.0.4",
-    "styled-components": "^3.2.3"
-    
+    "validator": "^10.2.0"
   },
   "devDependencies": {
     "expect": "^22.3.0",

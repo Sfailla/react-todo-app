@@ -1,99 +1,116 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
-import RegisterForm from '../components/Register-Form'
-import TextComponent from '../components/TextComponent'
+import { Link } from 'react-router-dom';
 
-import Authorize from '../utils/MyAuth'
-import Flash from '../utils/Flash'
+import RegisterForm from '../components/Register-Form';
+import TextComponent from '../components/TextComponent';
+
+import Authorize from '../utils/MyAuth';
+import Flash from '../utils/Flash';
 
 export default class RegisterPage extends Component {
-    static defaultProps = {
-        subtitle: [
-            '-this is a todo app that displays an express backend api and authentication using web tokens',
-            '-to get started just register and then you will have access to the todo app',
-            '-if you already registered than just click on the button below to login and go straight to the app'
-        ]
-    }
+	static defaultProps = {
+		subtitle: [
+			'-this is a todo app that displays an express backend api and authentication using web tokens',
+			'-to get started just register and then you will have access to the todo app',
+			'-if you already registered than just click on the button below to login and go straight to the app'
+		]
+	};
 
-    state = {
-        email: '',
-        password: '',
-        confPassword: '',
-        errors: []
-    }
+	state = {
+		email: '',
+		password: '',
+		confPassword: '',
+		errors: []
+	};
 
-    Authorize = new Authorize()
+	Authorize = new Authorize();
 
-    handleOnSubmit = (event) => {
-        event.preventDefault()
+	handleOnSubmit = event => {
+		event.preventDefault();
 
-        const { email, password, confPassword } = this.state
-        const { register, setToken } = this.Authorize
+		const { email, password, confPassword } = this.state;
+		const { register, setToken } = this.Authorize;
 
-        if (email && password && confPassword !== '') {
-            if (this.handleConfirmPassword(password, confPassword)) {
-                register(email, password)
-                    .then(res => res.json())
-                    .then(data => {
-                        setToken(data.tokens[0].token)
-                        setTimeout(() => this.props.history.push('/dashboard'), 300)
-                    })
-                    .catch(err => console.log(err))
-            } else {
-                let error = 'passwords don\'t match'
-                this.setState((prevState) => ({ errors: [...prevState.errors, error] }))
-            }
-        } else {
-            let error = 'Please fill out the form'
-            this.setState((prevState) => ({ errors: [...prevState.errors, error] }))
-        }
-    }
+		// changed recently without saving to git
+		if (email.length && password.length && confPassword.length) {
+			if (this.handleConfirmPassword(password, confPassword)) {
+				register(email, password)
+					.then(res => res.json())
+					.then(data => {
+						setToken(data.tokens[0].token);
+						setTimeout(() => this.props.history.push('/dashboard'), 300);
+					})
+					.catch(err => console.log(err));
+			} else {
+				let error = "passwords don't match";
+				this.setState(prevState => ({
+					errors: [ ...prevState.errors, error ]
+				}));
+			}
+		} else {
+			let error = 'Please fill out the form';
+			this.setState(prevState => ({
+				errors: [ ...prevState.errors, error ]
+			}));
+		}
+	};
 
-    handleOnChange = (event) => {
-        const { name, value } = event.target;
-        this.setState(() => ({ [name]: value }))
-    }
+	handleOnChange = event => {
+		const { name, value } = event.target;
+		this.setState(() => ({ [name]: value }));
+	};
 
-    handleConfirmPassword = (password, confPassword) => {
-        const checkPW = (password === confPassword) ? true : false
-        return checkPW
-    }
+	handleConfirmPassword = (password, confPassword) => {
+		const checkPW = password === confPassword ? true : false;
+		return checkPW;
+	};
 
-    componentDidUpdate = (prevState) => {
-        if (this.state.errors.length) {
-            setTimeout(() => {
-                return this.setState(() => ({ errors: [] }))
-            }, 1500)
-        }
-    }
+	componentDidUpdate = prevState => {
+		if (this.state.errors.length) {
+			setTimeout(() => {
+				return this.setState(() => ({ errors: [] }));
+			}, 1500);
+		}
+	};
 
-    render() {
-        return (                
-            <div className="App-Layout register">
-                <div className="register--left-box">
-                    <TextComponent
-                        subtitle={this.props.subtitle}
-                        title='TODO APP'
-                        needButton="LOGIN"
-                        location="/login"
-                        footerMessage="Steven Failla &copy; 2018" />
-                </div>
-                <div className="register--right-box">
-                    <h1 className="Form-Type register__right-title">Register Here</h1>
-                    {this.state.errors.length ? this.state.errors.map(error => {
-                        return <Flash msgType="error" message={error} duration={1500} />
-                    }) : null}
-                    <RegisterForm
-                        email={this.state.email}
-                        errors={this.state.errors}
-                        password={this.state.password}
-                        confPassword={this.state.confPassword}
-                        handleOnSubmit={this.handleOnSubmit}
-                        handleOnChange={this.handleOnChange}
-                        warningPW="always use a secure password" />
-                    <p style={{ textAlign: 'center', whiteSpace: 'nowrap' }}>already registered? click <a href="/login" style={{ textDecoration: 'none' }}>here</a> to login</p>
-                </div>
-            </div>
-        )
-    }
+	render() {
+		return (
+			<div className="App-Layout register">
+				<div className="register--left-box">
+					<TextComponent
+						subtitle={this.props.subtitle}
+						title="TODO APP"
+						needButton="LOGIN"
+						location="/login"
+						footerMessage="Steven Failla &copy; 2018"
+					/>
+				</div>
+				<div className="register--right-box">
+					<h1 className="Form-Type register__right-title">Register Here</h1>
+					{this.state.errors.length ? (
+						this.state.errors.map(error => {
+							return <Flash msgType="error" message={error} duration={1500} />;
+						})
+					) : null}
+					<RegisterForm
+						email={this.state.email}
+						errors={this.state.errors}
+						password={this.state.password}
+						confPassword={this.state.confPassword}
+						handleOnSubmit={this.handleOnSubmit}
+						handleOnChange={this.handleOnChange}
+						warningPW="always use a secure password"
+					/>
+					<p style={{ textAlign: 'center', whiteSpace: 'nowrap' }}>
+						already registered? click{' '}
+						<Link to="/login" style={{ textDecoration: 'none' }}>
+							here {' '}
+						</Link>
+						to login
+					</p>
+				</div>
+			</div>
+		);
+	}
 }
