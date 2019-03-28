@@ -1,37 +1,29 @@
-require('./config/config.js')
+require('./config/config.js');
 
-const bodyParser = require('body-parser')
-const express = require('express')
-const logger = require('morgan')
+const bodyParser = require('body-parser');
+const express = require('express');
+const logger = require('morgan');
 
-const User = require('./models/user')
-const Todo = require('./models/todo')
+const users = require('./routes/users');
+const todos = require('./routes/todos');
 
-const users = require('./routes/users')    
-const todos = require('./routes/todos')
+const app = express();
 
-// check and see if these are needed here..
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
-// const _ = require('lodash')
-// const { mongoose } = require('mongoose')
-// const { ObjectId } = require('mongoose').Types
+app.use('/todos', todos);
+app.use('/users', users);
 
-const authenticate = require('./middleware/authenticate')
+app.get('/*', (req, res) => {
+	res.sendFile(path.join(__dirname, '../public/index.html'), err => {
+		if (err) res.status(500).send(err);
+	});
+});
 
-const app = express()
+app.listen(process.env.PORT, () =>
+	console.log(`express server running on port: ${process.env.PORT}`)
+);
 
-
-app.use(logger('dev'))
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
-
-app.use('/todos', todos)
-app.use('/users', users)
-
-app.listen(process.env.PORT, () => 
-    console.log(
-        `express server running on port: ${process.env.PORT}`
-    )
-)
-
-module.exports = { app }
+module.exports = { app };

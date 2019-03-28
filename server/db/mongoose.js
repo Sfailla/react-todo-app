@@ -5,7 +5,8 @@ mongoose.Pomise = global.Promise;
 mongoose
 	.connect(process.env.MONGOOSE_URI, {
 		useNewUrlParser: true,
-		useFindAndModify: false
+		useFindAndModify: false,
+		useCreateIndex: true
 	})
 	.then(() => console.log('connection to MLAB established...'))
 	.catch(err =>

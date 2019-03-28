@@ -2,7 +2,7 @@ import React from 'react';
 
 import Todo from './Todo';
 
-import Flash from '../utils/Flash';
+// import Flash from '../utils/Flash';
 import { Icon25 } from '../utils/SVGComponent';
 
 const TodoComponent = props => {
@@ -27,7 +27,8 @@ const TodoComponent = props => {
 			<div className="todo__container">
 				{props.errors.length ? (
 					props.errors.map(error => {
-						return <Flash msgType="error" message={error} duration={1500} />;
+						return error;
+						// return <Flash msgType="error" message={error} duration={1500} />;
 					})
 				) : null}
 				{!props.todos.length ? (

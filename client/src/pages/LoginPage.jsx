@@ -5,7 +5,7 @@ import LoginForm from '../components/Login-Form';
 import TextComponent from '../components/TextComponent';
 
 import Authorize from '../utils/MyAuth';
-import Flash from '../utils/Flash';
+// import Flash from '../utils/Flash';
 
 export default class LoginPage extends Component {
 	static defaultProps = {
@@ -30,7 +30,9 @@ export default class LoginPage extends Component {
 		const { login, setToken } = this.Authorize;
 		const { email, password } = this.state;
 
-		if (email && password !== '') {
+		email && password && console.log(email, password);
+
+		if (email && password) {
 			login(email, password)
 				.then(res => {
 					if (res.status === 400 || res.status > 350) {
@@ -97,7 +99,8 @@ export default class LoginPage extends Component {
 					</a>
 					{this.state.errors.length ? (
 						this.state.errors.map(error => {
-							return <Flash msgType="error" message={error} duration={1500} />;
+							return console.error(error);
+							// return <Flash msgType="error" message={error} duration={1500} />;
 						})
 					) : null}
 					<LoginForm

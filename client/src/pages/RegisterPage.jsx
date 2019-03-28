@@ -6,7 +6,7 @@ import RegisterForm from '../components/Register-Form';
 import TextComponent from '../components/TextComponent';
 
 import Authorize from '../utils/MyAuth';
-import Flash from '../utils/Flash';
+// import Flash from '../utils/Flash';
 
 export default class RegisterPage extends Component {
 	static defaultProps = {
@@ -33,7 +33,7 @@ export default class RegisterPage extends Component {
 		const { register, setToken } = this.Authorize;
 
 		// changed recently without saving to git
-		if (email.length && password.length && confPassword.length) {
+		if (email && password && confPassword) {
 			if (this.handleConfirmPassword(password, confPassword)) {
 				register(email, password)
 					.then(res => res.json())
@@ -90,7 +90,8 @@ export default class RegisterPage extends Component {
 					<h1 className="Form-Type register__right-title">Register Here</h1>
 					{this.state.errors.length ? (
 						this.state.errors.map(error => {
-							return <Flash msgType="error" message={error} duration={1500} />;
+							return console.error(error);
+							// return <Flash msgType="error" message={error} duration={1500} />;
 						})
 					) : null}
 					<RegisterForm
