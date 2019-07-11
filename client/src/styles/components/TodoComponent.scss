@@ -77,6 +77,26 @@
 		font-size: 1.7rem;
 	}
 
+	&__error {
+		width: auto;
+		border: 1px solid #af4442;
+		border-radius: 5px;
+		background-color: rgb(241, 214, 214);
+		color: #af4442;
+		padding: 1rem;
+		text-align: center;
+		margin-bottom: 1.5rem;
+	}
+
+	&__header svg {
+		fill: #25b999;
+		transform: translate(12%, 22%);
+	}
+
+	/*============================================================================
+	REMOVED TODO BUTTON/SVG STYLING
+	============================================================================*/
+
 	&__button-container {
 		width: 10.2rem;
 		height: 100%;
@@ -93,6 +113,19 @@
 		background: transparent;
 	}
 
+	&__remove:hover > svg path {
+		fill: #e85656;
+	}
+
+	&__remove svg path {
+		fill: grey;
+		transition: fill .4s ease;
+	}
+
+	/*============================================================================
+		COMPLETED TODO BUTTON/SVG STYLING
+	============================================================================*/
+
 	&__completed {
 		position: relative;
 	}
@@ -107,45 +140,20 @@
 		top: 1rem;
 	}
 
-	&__error {
-		width: auto;
-		border: 1px solid #af4442;
-		border-radius: 5px;
-		background-color: rgb(241, 214, 214);
-		color: #af4442;
-		padding: 1rem;
-		text-align: center;
-		margin-bottom: 1.5rem;
-	}
-
-	//  SVGS STYLING
-
-	&__header svg {
-		fill: #25b999;
-		transform: translate(12%, 22%);
-	}
-
-	&__remove:hover > svg path {
-		fill: #e85656;
-	}
-
-	&__remove svg path {
-		fill: grey;
-		transition: fill .4s ease;
-	}
-
 	&__completed svg {
 		border: 2px solid #25b999;
 		border-radius: 10rem;
 	}
 
 	&__completed:hover svg {
+		transition: all 1s ease-in-out;
 		border: none;
 	}
 
 	&__completed:hover > svg rect {
 		fill: #25b999;
 	}
+
 	&__completed:hover svg path {
 		fill: white;
 	}
