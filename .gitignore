@@ -1,5 +1,3 @@
 node_modules
-server/config/config.js
 server/tests
 test
-package-lock.json
