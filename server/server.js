@@ -16,10 +16,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/todos', todos);
 app.use('/users', users);
 
-app.use(express.static(path.join(__dirname, '..', 'build')));
+app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
 
 app.get('*', (req, res) => {
-	res.sendFile(path.join(__dirname, '..', 'build', 'index.html'), err => {
+	res.sendFile(path.join(__dirname, '..', 'client', 'build', 'index.html'), err => {
 		if (err) res.status(500).send(err);
 	});
 });
