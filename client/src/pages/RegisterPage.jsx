@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
-
 import { Link } from 'react-router-dom';
 
 import RegisterForm from '../components/Register-Form';
 import TextComponent from '../components/TextComponent';
-
 import Authorize from '../utils/MyAuth';
-// import Flash from '../utils/Flash';
 
 export default class RegisterPage extends Component {
 	static defaultProps = {
@@ -32,7 +29,6 @@ export default class RegisterPage extends Component {
 		const { email, password, confPassword } = this.state;
 		const { register, setToken } = this.Authorize;
 
-		// changed recently without saving to git
 		if (email && password && confPassword) {
 			if (this.handleConfirmPassword(password, confPassword)) {
 				register(email, password)
@@ -80,7 +76,7 @@ export default class RegisterPage extends Component {
 				<div className="register--left-box">
 					<TextComponent
 						subtitle={this.props.subtitle}
-						title="TODO APP"
+						title="What TODO"
 						needButton="LOGIN"
 						location="/login"
 						footerMessage="Steven Failla &copy; 2018"
@@ -91,7 +87,6 @@ export default class RegisterPage extends Component {
 					{this.state.errors.length ? (
 						this.state.errors.map(error => {
 							return console.error(error);
-							// return <Flash msgType="error" message={error} duration={1500} />;
 						})
 					) : null}
 					<RegisterForm

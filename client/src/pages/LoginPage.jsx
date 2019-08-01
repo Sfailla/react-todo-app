@@ -3,9 +3,7 @@ import { Link } from 'react-router-dom';
 
 import LoginForm from '../components/Login-Form';
 import TextComponent from '../components/TextComponent';
-
 import Authorize from '../utils/MyAuth';
-// import Flash from '../utils/Flash';
 
 export default class LoginPage extends Component {
 	static defaultProps = {
@@ -96,17 +94,13 @@ export default class LoginPage extends Component {
 				<div className="login--right-box">
 					<h2 className="Form-Type">Enter email and password to login</h2>
 					<a href="/dashboard" className="login__link">
-						<button
-							className="login__dashboard-button"
-							disabled={!this.Authorize.isLoggedIn()}
-						>
+						<button className="login__dashboard-button" disabled={!this.Authorize.isLoggedIn()}>
 							Dashboard
 						</button>
 					</a>
 					{this.state.errors.length ? (
 						this.state.errors.map(error => {
 							return console.error(error);
-							// return <Flash msgType="error" message={error} duration={1500} />;
 						})
 					) : null}
 					<LoginForm
