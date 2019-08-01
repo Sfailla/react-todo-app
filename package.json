@@ -4,7 +4,7 @@
 	"description": "Im creating a react front-end for a todo app tutorial by Andrew Mead",
 	"main": "index.js",
 	"scripts": {
-		"dev:start": "concurrently -k \"npm run server\" \"npm run client\"",
+		"dev:start": "concurrently -k \"npm run dev:server\" \"npm run client\"",
 		"dev:server": "nodemon server/server.js",
 		"client": "cd client && npm start",
 		"build": "cd client && npm run build",
