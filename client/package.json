@@ -56,9 +56,6 @@
 		"test-react": "jest"
 	},
 	"proxy": "http://localhost:3001",
-	"browser": {
-		"fs": false
-	},
 	"jest": {
 		"collectCoverageFrom": [ "src/**/*.{js,jsx,mjs}" ],
 		"setupFiles": [ "<rootDir>/config/polyfills.js" ],
