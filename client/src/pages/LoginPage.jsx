@@ -28,8 +28,6 @@ export default class LoginPage extends Component {
 		const { login, setToken } = this.Authorize;
 		const { email, password } = this.state;
 
-		email && password && console.log(email, password);
-
 		if (email && password) {
 			login(email, password)
 				.then(res => {
