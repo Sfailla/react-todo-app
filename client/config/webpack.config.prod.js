@@ -345,4 +345,5 @@ module.exports = {
     tls: 'empty',
     child_process: 'empty',
   },
+  target: 'node'
 };
